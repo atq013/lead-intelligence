@@ -1,0 +1,42 @@
+[
+  {
+    "name": "MappingClarity",
+    "category": "AI data classification platform",
+    "industries": ["finance", "operations", "enterprise", "data-heavy businesses"],
+    "services": ["RAG", "Vertex AI", "document processing", "cloud workflows", "data classification", "human review workflows"],
+    "summary": "A multi-tenant AI-powered platform for classifying financial and operational data using cloud workflows, RAG, AI classification, and human review flows.",
+    "bestFor": "Companies dealing with complex, fragmented, or unstructured business data."
+  },
+  {
+    "name": "Review Engine",
+    "category": "AI review management platform",
+    "industries": ["local business", "healthcare", "real estate", "service businesses", "agencies"],
+    "services": ["AI-generated replies", "sentiment analysis", "Google Business Profile integration", "CRM workflows", "approval flows"],
+    "summary": "A review management platform with AI-generated replies, sentiment analysis, Google Business Profile integration, GoHighLevel workflows, and multi-tenant dashboards.",
+    "bestFor": "Businesses that need automated customer communication, reputation management, review workflows, or CRM-connected automation."
+  },
+  {
+    "name": "ApplyIQ",
+    "category": "AI job automation platform",
+    "industries": ["recruitment", "career", "HR", "job platforms", "automation"],
+    "services": ["job scraping", "CV tailoring", "ATS-friendly document generation", "n8n automation", "application tracking"],
+    "summary": "An AI-powered job automation system for scraping jobs, tailoring CVs, generating ATS-friendly documents, and tracking applications through automation workflows.",
+    "bestFor": "Recruitment, career automation, HR automation, and workflow automation use cases."
+  },
+  {
+    "name": "Halo Solutions",
+    "category": "event management and safety platform",
+    "industries": ["events", "security", "sports", "enterprise operations"],
+    "services": ["AWS Lambda", "GraphQL", "PostgreSQL", "dashboards", "real-time operational systems"],
+    "summary": "A large-scale event management and safety platform using AWS Lambda microservices, GraphQL, PostgreSQL, and operational dashboards.",
+    "bestFor": "Organizations needing event operations, safety workflows, dashboards, and scalable backend systems."
+  },
+  {
+    "name": "CheckThisProperty",
+    "category": "real estate and geospatial platform",
+    "industries": ["real estate", "property", "geospatial", "risk analysis"],
+    "services": ["maps", "property search", "zoning layers", "Elasticsearch", "PostgreSQL", "location-based search"],
+    "summary": "A real estate platform involving geospatial search, property data, zoning layers, risk information, and location-based filtering.",
+    "bestFor": "Real estate, property intelligence, GIS, and location-based decision-making platforms."
+  }
+]

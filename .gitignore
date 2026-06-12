@@ -1,0 +1,32 @@
+.next
+node_modules
+dist
+out
+.env.local
+.env*.local
+.DS_Store
+Thumbs.db
+
+cat > .gitignore <<'EOF'
+node_modules
+.next
+out
+dist
+
+.env
+.env.local
+.env.*
+*.log
+
+.DS_Store
+Thumbs.db
+
+# Optional: ignore generated private lead reports
+data/reports.json
+
+# Ollama/local runtime files if any
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.pid
+EOF
