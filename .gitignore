@@ -6,10 +6,10 @@ out
 .env*.local
 .DS_Store
 Thumbs.db
-
+.env/
 .env.*
 *.log
-
+.env
 data/reports.json
 
 *.sqlite
