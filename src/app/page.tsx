@@ -158,7 +158,7 @@ export default function HomePage() {
             </h1>
             <p className="max-w-2xl text-sm leading-7 text-sand-100 sm:text-base">
               Paste a LinkedIn About section, company description, website copy, job brief, or lead profile text.
-              The assistant will analyze the lead locally with Ollama, match the best AestheTeQs project, and draft
+              The assistant will analyze the lead with Mistral, match the best AestheTeQs project, and draft
               outreach you can use immediately.
             </p>
           </div>

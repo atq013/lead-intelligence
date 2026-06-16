@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AestheTeQs Lead Intelligence Assistant",
-  description: "Local-first lead analysis for AestheTeQs using LangChain.js and Ollama.",
+  description: "Lead analysis for AestheTeQs using LangChain.js and Mistral.",
 };
 
 export default function RootLayout({

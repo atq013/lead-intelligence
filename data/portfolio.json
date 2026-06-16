@@ -16,14 +16,6 @@
     "bestFor": "Businesses that need automated customer communication, reputation management, review workflows, or CRM-connected automation."
   },
   {
-    "name": "ApplyIQ",
-    "category": "AI job automation platform",
-    "industries": ["recruitment", "career", "HR", "job platforms", "automation"],
-    "services": ["job scraping", "CV tailoring", "ATS-friendly document generation", "n8n automation", "application tracking"],
-    "summary": "An AI-powered job automation system for scraping jobs, tailoring CVs, generating ATS-friendly documents, and tracking applications through automation workflows.",
-    "bestFor": "Recruitment, career automation, HR automation, and workflow automation use cases."
-  },
-  {
     "name": "Halo Solutions",
     "category": "event management and safety platform",
     "industries": ["events", "security", "sports", "enterprise operations"],

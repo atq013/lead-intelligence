@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         error:
           process.env.NODE_ENV !== "production"
             ? errorMessage
-            : "Failed to analyze lead. Make sure Ollama is running and both models are installed.",
+            : "Failed to analyze lead. Check your MISTRAL_API_KEY and model configuration.",
       },
       { status: 500 }
     );
