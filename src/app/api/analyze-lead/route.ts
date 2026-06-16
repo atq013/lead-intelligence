@@ -41,8 +41,12 @@ export async function POST(request: NextRequest) {
     const analysis = await analyzeLead(input);
     console.log("[API] After analyzeLead succeeds");
     console.log("[API] Before saving report");
-    await saveReport(input, analysis);
-    console.log("[API] After saving report succeeds");
+    try {
+      await saveReport({ input, analysis });
+      console.log("[API] After saving report succeeds");
+    } catch (error) {
+      console.error("[API] Report save failed, continuing without persistence:", error);
+    }
 
     return NextResponse.json({ success: true, analysis });
   } catch (error) {

@@ -1,53 +1,53 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 
-type StoredReport = {
-  id: string;
-  input: string;
-  analysis: unknown;
-  createdAt: string;
-};
+function shouldSaveReportsToFile() {
+  const explicitlyEnabled = process.env.SAVE_REPORTS_TO_FILE === "true";
+  const isProduction = process.env.NODE_ENV === "production";
+  const isNetlify = process.env.NETLIFY === "true";
 
-async function readExistingReports(filePath: string): Promise<StoredReport[]> {
-  try {
-    const raw = await readFile(filePath, "utf8");
-    const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) ? (parsed as StoredReport[]) : [];
-  } catch {
-    return [];
+  if (isProduction || isNetlify) {
+    return false;
   }
+
+  return explicitlyEnabled;
 }
 
-export async function saveReport(input: string, analysis: unknown): Promise<void> {
+export async function saveReport(report: unknown) {
+  if (!shouldSaveReportsToFile()) {
+    console.log("[REPORTS] Skipping file save in production/serverless environment.");
+    return;
+  }
+
   try {
-    console.log("[SAVE] Saving report");
-    const dataDir = path.join(process.cwd(), "data");
-    const filePath = path.join(dataDir, "reports.json");
-    console.log("[SAVE] reports.json path:", filePath);
-    const existingReports = await readExistingReports(filePath);
-    console.log("[SAVE] Existing file read successfully");
-    console.log("[SAVE] Number of existing reports:", existingReports.length);
+    const reportsPath = path.join(process.cwd(), "data", "reports.json");
 
-    const newReportId = randomUUID();
-    console.log("[SAVE] New report ID:", newReportId);
+    let existingReports: unknown[] = [];
 
-    const nextReports: StoredReport[] = [
-      {
-        id: newReportId,
-        input,
-        analysis,
-        createdAt: new Date().toISOString(),
-      },
-      ...existingReports,
-    ];
+    try {
+      const existing = await fs.readFile(reportsPath, "utf8");
+      const parsed = JSON.parse(existing) as unknown;
+      existingReports = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      existingReports = [];
+    }
 
-    console.log("[SAVE] Number of reports after adding:", nextReports.length);
-    await mkdir(dataDir, { recursive: true });
-    await writeFile(filePath, JSON.stringify(nextReports, null, 2), "utf8");
-    console.log("[SAVE] Write succeeded");
+    existingReports.unshift({
+      id: randomUUID(),
+      createdAt: new Date().toISOString(),
+      report,
+    });
+
+    await fs.mkdir(path.dirname(reportsPath), { recursive: true });
+    await fs.writeFile(
+      reportsPath,
+      JSON.stringify(existingReports, null, 2),
+      "utf8"
+    );
+
+    console.log("[REPORTS] Report saved locally:", reportsPath);
   } catch (error) {
-    console.error("[SAVE] Exact error:", error);
-    throw error;
+    console.error("[REPORTS] Failed to save report locally:", error);
   }
 }
