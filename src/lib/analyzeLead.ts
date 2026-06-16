@@ -2,6 +2,7 @@ import { ChatMistralAI } from "@langchain/mistralai";
 import { LeadAnalysisSchema, type LeadAnalysis } from "@/lib/schemas";
 import { compactLeadInput, extractFirstName } from "@/lib/leadContext";
 import { matchPortfolioProject } from "@/lib/portfolioMatcher";
+import { getMistralConfig } from "@/lib/mistralConfig";
 import { withTimeout } from "@/lib/withTimeout";
 
 const MAX_PROMPT_INPUT_CHARS = 3200;
@@ -332,16 +333,23 @@ export async function analyzeLead(leadInput: string): Promise<LeadAnalysis> {
   const discoveryQuestions = buildDiscoveryQuestions(leadType);
   const leadScore = buildLeadScore(leadType, serviceAngle);
 
-  if (!process.env.MISTRAL_KEY_API) {
-    throw new Error("Missing MISTRAL_KEY_API in environment variables.");
-  }
+  const mistralConfig = getMistralConfig();
 
   console.log("[ANALYZE] LLM provider: mistral");
-  console.log("[ANALYZE] Mistral model:", process.env.MISTRAL_MODEL || "mistral-small-latest");
+  console.log("[ANALYZE] Mistral model:", mistralConfig.model);
+  console.log("[ANALYZE] Mistral API key present:", mistralConfig.hasApiKey);
+  console.log("[ANALYZE] Mistral API key length:", mistralConfig.keyLength);
+  console.log("[ANALYZE] Mistral API key preview:", mistralConfig.keyPreview);
+
+  if (!mistralConfig.hasApiKey) {
+    throw new Error(
+      "Missing Mistral API key. Expected MISTRAL_KEY_API or MISTRAL_API_KEY."
+    );
+  }
 
   const model = new ChatMistralAI({
-    apiKey: process.env.MISTRAL_KEY_API,
-    model: process.env.MISTRAL_MODEL || "mistral-small-latest",
+    apiKey: mistralConfig.apiKey,
+    model: mistralConfig.model,
     temperature: 0.2,
     maxTokens: 700,
   });
@@ -365,7 +373,7 @@ export async function analyzeLead(leadInput: string): Promise<LeadAnalysis> {
   try {
     const response = await withTimeout(
       model.invoke(promptText),
-      60000,
+      25000,
       "Mistral generation"
     );
     console.log("[ANALYZE] After Mistral invoke. Took:", Date.now() - start, "ms");
@@ -374,8 +382,10 @@ export async function analyzeLead(leadInput: string): Promise<LeadAnalysis> {
     const parsed = parseParagraphResponse(responseText);
     paragraphs = normalizeParagraphs(parsed);
   } catch (error) {
-    console.log("[ANALYZE] Mistral generation failed or timed out, using fallback paragraphs");
-    console.log("[ANALYZE] Error:", error instanceof Error ? error.message : String(error));
+    console.error("[ANALYZE] Mistral generation failed");
+    console.error("[ANALYZE] Error object:", error);
+    console.error("[ANALYZE] Error message:", error instanceof Error ? error.message : String(error));
+    throw error;
   }
 
   const paragraph1 = sanitizeClientFacingText(paragraphs.paragraph1);
@@ -411,5 +421,3 @@ export async function analyzeLead(leadInput: string): Promise<LeadAnalysis> {
 
   return finalResult;
 }
-console.log("hi")
-console.log("hi")

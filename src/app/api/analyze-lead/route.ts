@@ -47,18 +47,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, analysis });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : undefined;
     console.error("[API] Error object:", error);
     console.error("[API] Error message:", errorMessage);
-    console.error("[API] Error stack:", errorStack);
+    console.error("[API] Error stack:", error instanceof Error ? error.stack : "No stack");
 
     return NextResponse.json(
       {
         success: false,
-        error:
-          process.env.NODE_ENV !== "production"
-            ? errorMessage
-            : "Failed to analyze lead. Check your MISTRAL_KEY_API and model configuration.",
+        error: errorMessage.includes("Mistral")
+          ? errorMessage
+          : `Failed to analyze lead: ${errorMessage}`,
       },
       { status: 500 }
     );
