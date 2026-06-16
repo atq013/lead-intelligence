@@ -332,15 +332,15 @@ export async function analyzeLead(leadInput: string): Promise<LeadAnalysis> {
   const discoveryQuestions = buildDiscoveryQuestions(leadType);
   const leadScore = buildLeadScore(leadType, serviceAngle);
 
-  if (!process.env.MISTRAL_API_KEY) {
-    throw new Error("Missing MISTRAL_API_KEY in environment variables.");
+  if (!process.env.MISTRAL_KEY_API) {
+    throw new Error("Missing MISTRAL_KEY_API in environment variables.");
   }
 
   console.log("[ANALYZE] LLM provider: mistral");
   console.log("[ANALYZE] Mistral model:", process.env.MISTRAL_MODEL || "mistral-small-latest");
 
   const model = new ChatMistralAI({
-    apiKey: process.env.MISTRAL_API_KEY,
+    apiKey: process.env.MISTRAL_KEY_API,
     model: process.env.MISTRAL_MODEL || "mistral-small-latest",
     temperature: 0.2,
     maxTokens: 700,

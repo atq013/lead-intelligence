@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         error:
           process.env.NODE_ENV !== "production"
             ? errorMessage
-            : "Failed to analyze lead. Check your MISTRAL_API_KEY and model configuration.",
+            : "Failed to analyze lead. Check your MISTRAL_KEY_API and model configuration.",
       },
       { status: 500 }
     );
