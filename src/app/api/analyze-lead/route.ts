@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { analyzeLead } from "@/lib/analyzeLead";
-import { saveReport } from "@/lib/saveReport";
 import { AnalyzeLeadRequestSchema } from "@/lib/schemas";
 
 export const runtime = "nodejs";
@@ -9,6 +7,11 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   console.log("[API] Route called");
   try {
+    const [{ runLeadAgent }, { saveReport }] = await Promise.all([
+      import("@/agent/runAgent"),
+      import("@/lib/saveReport"),
+    ]);
+
     const body = (await request.json().catch((error) => {
       console.error("[API] Failed to parse request JSON:", error);
       return null;
@@ -37,18 +40,22 @@ export async function POST(request: NextRequest) {
 
     const { input } = parsedBody.data;
     console.log("[API] Validation passed");
-    console.log("[API] Before calling analyzeLead");
-    const analysis = await analyzeLead(input);
-    console.log("[API] After analyzeLead succeeds");
+    console.log("[API] Before calling runLeadAgent");
+    const result = await runLeadAgent(input);
+    console.log("[API] After runLeadAgent succeeds");
     console.log("[API] Before saving report");
     try {
-      await saveReport({ input, analysis });
+      await saveReport({
+        input,
+        analysis: result.analysis,
+        agentMetadata: result.agentMetadata,
+      });
       console.log("[API] After saving report succeeds");
     } catch (error) {
       console.error("[API] Report save failed, continuing without persistence:", error);
     }
 
-    return NextResponse.json({ success: true, analysis });
+    return NextResponse.json({ success: true, analysis: result.analysis, agentMetadata: result.agentMetadata });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("[API] Error object:", error);
